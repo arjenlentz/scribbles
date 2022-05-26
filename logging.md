@@ -36,8 +36,24 @@ Looking at the issue here, one possible solution appears to present itself: Sign
 
 Cost aside, event messages that are only signed are readable to others. Thus, a compromised relay could view (more) event messages from other systems. If we were to use symmetric encryption instead, it would work out "cheaper" (in CPU terms) as well as resolving the problem of the relay reading messages. Instead, it would only handle "sealed envelopes".
 
-Encrypting rather than signing will likely prevent a damaged message from being read at all, but realistically it doesn't make much difference. If it was maliciously altered, the original content is lost either way. The transport layer (TCP) should take care of the messsage integrity otherwise.
+Encrypting rather than signing will likely prevent a damaged message from being read at all, but realistically it doesn't make much difference. If it was maliciously altered, the original content is lost either way. The transport layer (TCP) should take care of the messsage integrity otherwise (although we do know from experience that this is not always the case. Having some form of check inside our own format remains wise).
 
+#### Filtering/Modifications on a Relay
+
+If we get an event off the originating system quickly, out of reach of a malicious actor there, but may not want to send through all events, filtering may be desirable.
+ - If events are encrypted in full, this is obviously impossible.
+ - If some aspects are unencrypted, filtering on those aspects becomes possible, at the expense of some security. If event messages are passed via TLS, only the originating system and the relay have access to the unencrypted bits, and that was already the case.
+
+If events are sequenced, we do have to let the final destination know that an event was removed. So some overhead is still incurred. This could be made safer by the relay signing the new message, although that requires the relay to be trusted where it previously would not have to be.
+
+If we allow events to be modified according to some ruleset(s), those modified events also need to be signed by the relay.
+
+Why filter or modify? It is important to consider this, particularly as there appear to be substantial consequences.
+Historically, two factors have been the most relevant:
+ - network bandwidth or cost between DCs.
+ - processing or storage capacity (or cost) at the receiving end. If we're not going to store certain log entries, why send them around first?
+Pure bandwidth, and processing and storage costs are very low these days (2022), it's only licencing aspects of a product that might interfere.
+If there is no licence cost constraint, it may be better to keep all the data. Destruction of data is bad in forensic terms. You can not known in advance what data may be needed.
 
 ### Log Collectors
 
@@ -55,7 +71,7 @@ It makes sense. Cool. We don't want to be re-inventing the wheel.
 
 Interestingly, from the above, it may be that it may NOT make sense to
  - worry about signing event messages (IETF also had https://tools.ietf.org/id/draft-ietf-syslog-sign-23.html which expired in 2008);
- - use TLS rather than plain TCP connections - because TLS only encrypts hops, it does not prevent a compromised relay.
+ - use TLS rather than plain TCP connections - because TLS only encrypts hops, it does not prevent a compromised relay. E.g., if we encrypt entire event messages, it no longer matters whether the transport layer is encrypted.
 
-We'll consider TLS more later.
+We'll consider TLS more later, and virtual network layers such as WireGuard.
 
