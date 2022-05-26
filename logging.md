@@ -52,6 +52,7 @@ Why filter or modify? It is important to consider this, particularly as there ap
 Historically, two factors have been the most relevant:
  - network bandwidth or cost between DCs.
  - processing or storage capacity (or cost) at the receiving end. If we're not going to store certain log entries, why send them around first?
+
 Pure bandwidth, and processing and storage costs are very low these days (2022), it's only licencing aspects of a product that might interfere.
 If there is no licence cost constraint, it may be better to keep all the data. Destruction of data is bad in forensic terms. You can not known in advance what data may be needed.
 
