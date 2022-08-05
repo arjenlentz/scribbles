@@ -6,9 +6,17 @@ Lots of logging mechanisms, and aggregation and analysis tools exist, some decad
 Mostly great stuff, but they don't appear to cover current insights in for instance security, forensics, and compliance.
 And that, of course, is a problem.
 
-Aspects are outlined as a "thought stream", so the logic trail is visible (and can be argued, if necessary), make it clear what the fundamental assumptions are, and how a partciular conslusion is reached. This way, it is possible to identify and revisit an issue, should any of the underlying factors change later.
+Aspects are outlined as a "thought stream", so the logic trail is visible (and can be argued, if necessary), make it clear what the fundamental assumptions are, and how a particular conslusion is reached. This way, it is possible to identify and revisit an issue, should any of the underlying factors change later.
 
 Along the way we will revisit some things that have indeed been around for a long time, but it's good to check in and validate that it's still the best way to go about it - i.e., the original reasoning still holds. In many cases, we have to go through the process to figure out what the original reasoning might have been, as it wasn't documented at the time. There might be other references (emails, etc - happy to receive pull requests with suitable references!) but it is felt that it's still good to capture all this in a narrative, in the one place.
+
+
+## Time Zones and Daylight Savings
+
+Time zones and daylight savings periods are simply a monster, they cause all kinds of grief when processing and analysing logs as well as when correlating logs from servers that "live in" different time zones.
+Best practice is this rule: all servers should run in UTC. Yep, it's that simple. Do it.
+
+For applications on those systems: where data needs to be presented to users in their local time, that is really an application issue, not a system issue. Don't try to solve the problem in the wrong place, as that just causes more trouble. The system doesn't know in advance which user from which timezone is going to look at the data! You keep the data in UTC, and convert it for display according to the timezone information of the user.
 
 
 ## Security
